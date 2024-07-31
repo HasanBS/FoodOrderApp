@@ -37,8 +37,6 @@ export const authOptions = {
           return user;
         }
 
-        console.log(passwordOk)
-
         return null
       }
     })
