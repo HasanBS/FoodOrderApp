@@ -3,6 +3,7 @@ import Image from 'next/image';
 import React, { useState, FormEvent } from 'react';
 import Link from "next/link";
 import { signIn } from 'next-auth/react';
+import GoogleSignIn from '../components/Menu/GoogleSignIn';
 
 export default function RegisterPage() {
     const [email, setEmail] = useState('');
@@ -61,10 +62,7 @@ export default function RegisterPage() {
                 <input type="password" placeholder="Şifre" disabled={creatingUser} value={password} onChange={ev => setPassword(ev.target.value)} />
                 <button type="submit" disabled={creatingUser}>Kayıt ol</button>
                 <div className="my-4 text-gray-500 text-center">veya</div>
-                <button type='button' onClick={() => signIn('google', { callbackUrl: '/' })} className='flex justify-center gap-4'>
-                    <Image src="/google.png" width={24} height={24} alt="Google ile giriş yap" />
-                    Google ile giriş yap
-                </button>
+                <GoogleSignIn />
                 <div className='my-4 text-center text-gray-500 border-t pt-4'>
                     Zaten bir hesabınız var mı?{' '}
                     <Link className=' underline' href={'/login'}>Giriş yapın &raquo;</Link>

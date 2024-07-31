@@ -1,8 +1,8 @@
 "use client";
-import Image from 'next/image';
 import React, { useState, FormEvent } from 'react';
 import Link from "next/link";
 import { signIn } from "next-auth/react";
+import GoogleSignIn from '../components/Menu/GoogleSignIn';
 
 
 export default function LoginPage() {
@@ -46,10 +46,7 @@ export default function LoginPage() {
                 <input type="password" name="password" placeholder="Şifre" disabled={loggingIn} value={password} onChange={ev => setPassword(ev.target.value)} />
                 <button type="submit" disabled={loggingIn}>Giriş Yap</button>
                 <div className="my-4 text-gray-500 text-center">veya</div>
-                <button type='button' onClick={() => signIn('google', { callbackUrl: '/' })} className='flex justify-center gap-4'>
-                    <Image src="/google.png" width={24} height={24} alt="Google ile giriş yap" />
-                    Google ile giriş yap
-                </button>
+                <GoogleSignIn />
                 <div className='my-4 text-center text-gray-500 border-t pt-4'>
                     Henüz bir hesabınız yok mu?{' '}
                     <Link className=' underline' href={'/register'}>Kayıt olun &raquo;</Link>
