@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import UserTabs from '../components/layout/UserTabs';
+import EditableImage from '../components/layout/EditableImage';
 
 export default function ProfilePage() {
     const session = useSession();
@@ -14,6 +16,8 @@ export default function ProfilePage() {
     const [city, setCity] = useState('');
     const [postalCode, setPostalCode] = useState('');
     const [address, setAddress] = useState('');
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [isProfileFetched, setIsProfileFetched] = useState(false);
     const userData = session.data?.user;
     const { status } = session;
     useEffect(() => {
@@ -23,6 +27,7 @@ export default function ProfilePage() {
             }).then(async (res) => {
                 if (res.ok) {
                     return res.json().then(data => {
+                        setIsProfileFetched(true);
                         setUserName(data.name);
                         setImage(data.image);
                         setPhone(data.phone);
@@ -30,6 +35,7 @@ export default function ProfilePage() {
                         setCity(data.city);
                         setPostalCode(data.postalCode);
                         setAddress(data.address);
+                        setIsAdmin(data.admin);
                     });
                 } else {
                     toast.error('Bir hata oluştu!');
@@ -39,7 +45,7 @@ export default function ProfilePage() {
         }
     }, [status, session]);
 
-    if (session.status === 'loading') {
+    if (session.status === 'loading' || !isProfileFetched) {
         return 'Loading...';
     }
 
@@ -77,52 +83,13 @@ export default function ProfilePage() {
             });
     }
 
-    async function handleFileChange(ev: React.ChangeEvent<HTMLInputElement>) {
-        const file = ev.target.files?.[0];
-        if (!file) {
-            return;
-        }
-        const formData = new FormData;
-        formData.set('file', file);
-
-        const uploadPromise =
-            fetch('/api/upload', {
-                method: 'POST',
-                body: formData
-            }).then(async (res) => {
-                if (res.ok) {
-                    return res.json().then(data => {
-                        setImage(data.url);
-                    }
-                    );
-                } else {
-                    throw new Error('Failed to upload image');
-                }
-            });
-
-        await toast.promise(uploadPromise, {
-            loading: 'Resim yükleniyor...',
-            success: 'Resim yüklendi',
-            error: 'Resim yüklenirken bir hata oluştu',
-        });
-    }
-
     return (
         <section className="mt-8">
-            <h1 className="text-center text-primary text-4xl mb-4">
-                Profile Page
-            </h1>
-            <div className="max-w-xs mx-auto">
+            <UserTabs isAdmin={isAdmin} />
+            <div className="max-w-xs mx-auto mt-6">
                 <div className="flex justify-center gap-4">
-                    <div className="p-2 rounded-lg relative  min-w-[180px] max-h-[250px]">
-                        {
-                            image &&
-                            <Image className=" rounded-lg w-full h-full mb-1" src={image} height={250} width={250} alt="Avatar" />
-                        }
-                        <label>
-                            <input type="file" className=" hidden" onChange={handleFileChange} />
-                            <span className="block p-3 mt-4 border-gray-300 text-center rounded-lg border cursor-pointer">Değiştir</span>
-                        </label>
+                    <div className="gap-2 items-start flex">
+                        <EditableImage link={image} setLink={setImage} />
                     </div>
                     <form onSubmit={handleProfileInfoUpdate} className="grow">
                         <label>İsim Soyisim</label>

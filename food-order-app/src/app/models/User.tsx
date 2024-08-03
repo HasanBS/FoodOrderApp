@@ -14,22 +14,7 @@ const UserSchema = new Schema({
     },
     image: {
         type: String,
-    },
-    phone: {
-        type: String,
-    },
-    country: {
-        type: String,
-    },
-    city: {
-        type: String,
-    },
-    postalCode: {
-        type: String,
-    },
-    address: {
-        type: String,
-    },
+    }
 }, { timestamps: true });
 
 export const User = models?.User || model('User', UserSchema);

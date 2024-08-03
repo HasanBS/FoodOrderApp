@@ -1,5 +1,6 @@
 import client from "@/app/libs/mongoConnect";
 import { User } from "@/app/models/User";
+import { UserInfo } from "@/app/models/UserInfo";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import bcrypt from "bcrypt";
 import * as mongoose from "mongoose";
@@ -28,7 +29,7 @@ export const authOptions = {
         
         const email = credentials?.email;
         const password = credentials?.password;
-        mongoose.connect(process.env.MONGODB_URL??'');
+        mongoose.connect(process.env.MONGODB_URI??'');
 
         const user = await User.findOne({email});
         const passwordOk = user && bcrypt.compareSync(password ?? '', user.password);
@@ -43,18 +44,18 @@ export const authOptions = {
   ],
 };
 
-// export async function isAdmin() {
-//   const session = await getServerSession(authOptions as any);
-//   const userEmail = session?.user?.email;
-//   if (!userEmail) {
-//     return false;
-//   }
-//   // const userInfo = await UserInfo.findOne({email:userEmail});
-//   // if (!userInfo) {
-//   //   return false;
-//   // }
-//   // return userInfo.admin;
-// }
+export async function isAdmin() {    
+  const session = await getServerSession(authOptions as any) as any;
+  const userEmail = session?.user?.email;
+  if (!userEmail) {
+    return false;
+  }
+  const userInfo = await UserInfo.findOne({email:userEmail});
+  if (!userInfo) {
+    return false;
+  }
+  return userInfo.admin;
+}
 
 const handler = NextAuth(authOptions as any);
 
