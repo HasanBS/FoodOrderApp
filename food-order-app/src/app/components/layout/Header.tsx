@@ -3,7 +3,7 @@ import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
 
-export default function () {
+export default function Header() {
     const session = useSession();
     const status = session.status;
     const userData = session.data?.user;

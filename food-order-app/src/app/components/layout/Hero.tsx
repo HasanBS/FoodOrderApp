@@ -13,7 +13,7 @@ export default function Hero() {
                     </span>
                 </h1>
                 <p className="my-4 text-gray-500 text-sm">
-                    Lezzetli ve taze lahmacunlarımızla sizi bekliyoruz. Lahmacun keyfi Hasso Lahmacun'da yaşanır.
+                    Lezzetli ve taze lahmacunlarımızla sizi bekliyoruz. Lahmacun keyfi Hasso Lahmacun&apos;da yaşanır.
                 </p>
                 <div className="flex gap-4 text-sm ">
                     <button className="justify-center items-center bg-primary flex gap-2 text-white rounded-full px-4 py-2 ">
