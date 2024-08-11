@@ -1,20 +1,36 @@
 "use client";
 
 import UseProfile from "@/app/components/UseProfile";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import UserTabs from "@/app/components/layout/UserTabs";
 import Link from "next/link";
-import ArrowLeft from '../../components/Icons/ArrowLeft';
-import { redirect } from "next/navigation";
-import MenuItemForm from "@/app/components/layout/MenuItemForm";
+import ArrowLeft from '../../../components/Icons/ArrowLeft';
+import { redirect, useParams } from "next/navigation";
+import MenuItemForm from '../../../components/layout/MenuItemForm';
 
 
-export default function NewMenuItemPage() {
+export default function EditMenuItemPage() {
+    const { id } = useParams();
+
     const { isLoading: profileLoading, data: profileData } = UseProfile();
     const [menuItem, setMenuItem] = useState(null as any);
-
     const [redirectItems, setRedirectItems] = useState(false);
+
+    useEffect(() => {
+        fetch('/api/menu-items').then(async (res) => {
+            if (res.ok) {
+                return res.json().then(data => {
+                    const menuItem = data.find((menuItem: any) => menuItem._id === id);
+                    setMenuItem(menuItem);
+                });
+            } else {
+                console.error('Failed to fetch menu item');
+            }
+        });
+    }
+        , []);
+
 
     if (profileLoading) {
         return 'Yükleniyor...';
@@ -24,11 +40,12 @@ export default function NewMenuItemPage() {
         return 'Yetkiniz yok!';
     }
 
-    async function handleMenuItemSave(ev: React.FormEvent, data: any) {
+    async function handleMenuItemEdit(ev: React.FormEvent, data: any) {
         ev.preventDefault();
+        data._id = id;
         const menuItemSavePromise =
             fetch('/api/menu-items', {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -60,9 +77,9 @@ export default function NewMenuItemPage() {
                 Tüm Yemekler
             </Link>
             <h1 className="text-center text-primary text-4xl mb-6 mt-8">
-                Yeni Menü Ekle
+                Menü Düzenle
             </h1>
-            <MenuItemForm onSubmit={handleMenuItemSave} menuItem={menuItem} />
+            <MenuItemForm onSubmit={handleMenuItemEdit} menuItem={menuItem} />
         </section>
     );
 }

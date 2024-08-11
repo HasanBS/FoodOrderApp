@@ -10,6 +10,25 @@ import GoogleProvider from "next-auth/providers/google";
 
 
 export const authOptions = {
+  callbacks: {
+    async session({ session, user, token }: { session: any, user: any, token: any }) {
+    console.log("Session:", session);
+    console.log("User:", user);
+    console.log("Token:", token);
+    session.user.id = user?.id || token?.sub;
+    return session;
+  },
+    async jwt({ token, user }: { token: any, user: any }) {
+      if (user) {
+        token.name = user.name || undefined;
+        token.picture = user.picture || undefined;
+        token.id = user.id || token.sub;
+      }
+      return token;
+    },
+     
+  },
+  allowDangerousEmailAccountLinking: true,
   secret: process.env.SECRET,
   adapter: MongoDBAdapter(client),
   providers: [
@@ -25,20 +44,25 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        console.log('credentials', credentials);
         
         const email = credentials?.email;
         const password = credentials?.password;
+
         mongoose.connect(process.env.MONGODB_URI??'');
+        console.log('connection made');
+
 
         const user = await User.findOne({email});
+        console.log('User',user);
+
         const passwordOk = user && bcrypt.compareSync(password ?? '', user.password);
+        console.log('passwordOk',passwordOk);
 
         if (passwordOk) {
           return user;
         }
 
-        return null
+        return null;
       }
     })
   ],

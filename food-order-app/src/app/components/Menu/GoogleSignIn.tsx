@@ -3,6 +3,7 @@ import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
 import Image from "next/image";
 
+//! Sign got some errors check it 
 export default function GoogleSignIn() {
 
     async function handleGoogleSignIn() {

@@ -2,15 +2,14 @@ import {isAdmin} from "@/app/api/auth/[...nextauth]/route";
 import { MenuItem } from "@/app/models/MenuItem";
 import mongoose from "mongoose";
 
-const uri = process.env.MONGO_URL ?? '';
+const uri = process.env.MONGODB_URI ?? '';
 
 export async function POST(req : any) {
   mongoose.connect(uri);
   const data = await req.json();
   if (true) {
     const menuItemDoc = await MenuItem.create(data);
-  console.log('menuItemDoc', menuItemDoc);    
-
+    console.log('menuItemDoc', menuItemDoc);    
     return Response.json(menuItemDoc);
   } else {
     return Response.json({});
