@@ -1,8 +1,8 @@
 import { User } from "@/app/models/User";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
 import { UserInfo } from '../../models/UserInfo';
+import { authOptions } from "../auth/authOptions";
 
 export async function PUT(req: any) {
     const data = await req.json();

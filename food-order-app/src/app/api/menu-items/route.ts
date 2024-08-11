@@ -1,5 +1,5 @@
-import {isAdmin} from "@/app/api/auth/[...nextauth]/route";
 import { MenuItem } from "@/app/models/MenuItem";
+import { isAdmin } from "@/app/utils/authHelpers";
 import mongoose from "mongoose";
 
 const uri = process.env.MONGODB_URI ?? '';
